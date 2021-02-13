@@ -1,4 +1,27 @@
-//FormApp.getActiveForm();
+function ResisterStatus(){
+  const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+  const STATUS_SHEET = SS.getSheetByName("貸出状況");
+  let range = STATUS_SHEET.getRange("A:G");
+  let lastRow = STATUS_SHEET.getLastRow();
+
+  var answers = {
+    "bookNumber": 1,
+    "employeeName": "山田太郎",
+    "employeeNumber": 0000,
+    "borrowDate": new Date,
+    "backDeadline": new Date};//TODO:配列から取ってくる
+
+  for (let i = 2; i <= lastRow; i++){
+    if (range.getCell(i, 1).getValue() == answers.bookNumber){
+      //TODO:ひとつもないorふたつ以上あったらエラー
+      range.getCell(i, 3).setValue(answers.employeeName);
+      range.getCell(i, 4).setValue(answers.employeeNumber);
+      range.getCell(i, 5).setValue(answers.borrowDate);
+      range.getCell(i, 6).setValue(answers.backDeadline);
+    }
+  }
+}
+
 function UpdateFormByBorrow() {
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
@@ -30,12 +53,12 @@ function UpdateFormByBorrow() {
 }
 
 
-function logDate(e){
-  // let answers = e.response.getItemResponses()
-  var itemResponses = e.response.getItemResponses();
-  const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = TriggerSS.getSheetByName("3返却");
-  let cell = sheet.getRange(2,5).getCell(1,1);
-  cell.setValue(itemResponses[4]);
-  sheet.getRange(3,5).getCell(1,1).setValue("動いた");
-}
+// function logDate(e){
+//   // let answers = e.response.getItemResponses()
+//   var itemResponses = e.response.getItemResponses();
+//   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
+//   const sheet = TriggerSS.getSheetByName("3返却");
+//   let cell = sheet.getRange(2,5).getCell(1,1);
+//   cell.setValue(itemResponses[4]);
+//   sheet.getRange(3,5).getCell(1,1).setValue("動いた");
+// }

@@ -1,3 +1,8 @@
+function ResetStatus(){
+
+  
+}
+
 function UpdateFormByBack() {
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
