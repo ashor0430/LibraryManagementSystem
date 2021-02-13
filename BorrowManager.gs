@@ -1,3 +1,31 @@
+function InsertBorrowLogData(){
+  const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+  let sheets = SS.getSheets();
+
+  var answers = {
+    "bookNumber": 1,
+    "employeeName": "山田太郎",
+    "employeeNumber": 0000,
+    "borrowDate": new Date,
+    "backDeadline": new Date
+  };//TODO:配列から取ってくる
+
+  for (let i = 2; i < sheets.length; i++){
+    // Logger.log(sheets[i]);
+    // Logger.log(sheets[i].getName());
+    if (sheets[i].getName().indexOf(answers.bookNumber) >= 0){
+      // Logger.log("入った");
+      //TODO:ひとつもないorふたつ以上あったらエラー
+      let range = sheets[i].getRange("B:E")
+      let lastRow = sheets[i].getLastRow();
+      range.getCell(lastRow +1, 1).setValue(answers.employeeName);
+      range.getCell(lastRow +1, 2).setValue(answers.employeeNumber);
+      range.getCell(lastRow +1, 3).setValue(answers.borrowDate);
+      range.getCell(lastRow +1, 4).setValue(answers.backDeadline);
+    }
+  }
+}
+
 function ResisterStatus(){
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
@@ -9,7 +37,8 @@ function ResisterStatus(){
     "employeeName": "山田太郎",
     "employeeNumber": 0000,
     "borrowDate": new Date,
-    "backDeadline": new Date};//TODO:配列から取ってくる
+    "backDeadline": new Date
+  };//TODO:配列から取ってくる
 
   for (let i = 2; i <= lastRow; i++){
     if (range.getCell(i, 1).getValue() == answers.bookNumber){
