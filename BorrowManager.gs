@@ -7,7 +7,8 @@ function InsertBorrowLogData(){
     "employeeName": "山田太郎",
     "employeeNumber": 0000,
     "borrowDate": new Date,
-    "backDeadline": new Date};//TODO:配列から取ってくる
+    "backDeadline": new Date
+  };//TODO:配列から取ってくる
 
   for (let i = 2; i < sheets.length; i++){
     // Logger.log(sheets[i]);
@@ -36,7 +37,8 @@ function ResisterStatus(){
     "employeeName": "山田太郎",
     "employeeNumber": 0000,
     "borrowDate": new Date,
-    "backDeadline": new Date};//TODO:配列から取ってくる
+    "backDeadline": new Date
+  };//TODO:配列から取ってくる
 
   for (let i = 2; i <= lastRow; i++){
     if (range.getCell(i, 1).getValue() == answers.bookNumber){
