@@ -5,12 +5,17 @@ function GetBackData(){
   let sortedTimestamp = [];
 
   for (let i = 0; i < SHEETS.length; i++){
+
     if (SHEETS[i].getName().indexOf("貸出") >= 0){
+ 
       timestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
       sortedTimestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+
     } else if (SHEETS[i].getName().indexOf("返却")){
+
       timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
       sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+    
     }
   }
 
@@ -36,7 +41,8 @@ function GetBackData(){
   answers.employeeName = range.getCell(lastRow, 1).getValue();
   answers.employeeNumber = range.getCell(lastRow, 2).getValue();
   answers.backDate = range.getCell(lastRow, 3).getValue();
-  Logger.log(answers);
+  // Logger.log(answers);
+  return answers;
 }
 
 function InsertBackLogData(){
@@ -54,10 +60,9 @@ function InsertBackLogData(){
     // Logger.log(sheets[i]);
     // Logger.log(sheets[i].getName());
     if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
-      // Logger.log("入った");
       continue;
     }
-      //TODO:ひとつもないorふたつ以上あったらエラー
+    //TODO:ひとつもないorふたつ以上あったらエラー
     let range = sheets[i].getRange("B:F")
     for (let row = 2; row <= sheets[i].getLastRow(); row++){
       if (range.getCell(row, 2).getValue() == answers.employeeNumber && range.getCell(row, 5).isBlank()){

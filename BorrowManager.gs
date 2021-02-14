@@ -1,3 +1,15 @@
+function BorrowBook(){
+
+  let answers = GetBorrowData();
+
+  InsertBorrowLogData(answers);
+
+  ResisterStatus(answers);
+
+  UpdateFormByBorrow(answers);
+
+}
+
 function GetBorrowData(){
   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
   const SHEETS = TriggerSS.getSheets();
@@ -52,6 +64,7 @@ function GetBorrowData(){
   answers.borrowDate = range.getCell(1, 3).getValue();
   answers.backDeadline = range.getCell(1, 4).getValue();
   // Logger.log(answers);
+  return answers;
 }
 
 
@@ -70,16 +83,17 @@ function InsertBorrowLogData(){
   for (let i = 2; i < sheets.length; i++){
     // Logger.log(sheets[i]);
     // Logger.log(sheets[i].getName());
-    if (sheets[i].getName().indexOf(answers.bookNumber) >= 0){
-      // Logger.log("入った");
-      //TODO:ひとつもないorふたつ以上あったらエラー
-      let range = sheets[i].getRange("B:E")
-      let lastRow = sheets[i].getLastRow();
-      range.getCell(lastRow +1, 1).setValue(answers.employeeName);
-      range.getCell(lastRow +1, 2).setValue(answers.employeeNumber);
-      range.getCell(lastRow +1, 3).setValue(answers.borrowDate);
-      range.getCell(lastRow +1, 4).setValue(answers.backDeadline);
+    if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
+      return;
     }
+    //TODO:ひとつもないorふたつ以上あったらエラー
+    let range = sheets[i].getRange("B:E")
+    let lastRow = sheets[i].getLastRow();
+    range.getCell(lastRow +1, 1).setValue(answers.employeeName);
+    range.getCell(lastRow +1, 2).setValue(answers.employeeNumber);
+    range.getCell(lastRow +1, 3).setValue(answers.borrowDate);
+    range.getCell(lastRow +1, 4).setValue(answers.backDeadline);
+  
   }
 }
 
