@@ -1,3 +1,33 @@
+function InsertBackLogData(){
+  const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+  let sheets = SS.getSheets();
+
+  var answers = {
+    "bookNumber": 2,
+    "employeeName": "山田太郎",
+    "employeeNumber": 2222,
+    "backDate": new Date,
+  };//TODO:配列から取ってくる
+
+  for (let i = 2; i < sheets.length; i++){
+    // Logger.log(sheets[i]);
+    // Logger.log(sheets[i].getName());
+    if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
+      // Logger.log("入った");
+      continue;
+    }
+      //TODO:ひとつもないorふたつ以上あったらエラー
+    let range = sheets[i].getRange("B:F")
+    for (let row = 2; row <= sheets[i].getLastRow(); row++){
+      if (range.getCell(row, 2).getValue() == answers.employeeNumber && range.getCell(row, 5).isBlank()){
+        range.getCell(row, 5).setValue(answers.backDate);
+      }
+    }
+  }
+}
+
+
+
 function ResetStatus(){
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
