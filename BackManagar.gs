@@ -12,14 +12,15 @@ function InsertBackLogData(){
   for (let i = 2; i < sheets.length; i++){
     // Logger.log(sheets[i]);
     // Logger.log(sheets[i].getName());
-    if (sheets[i].getName().indexOf(answers.bookNumber) >= 0){
+    if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
       // Logger.log("入った");
+      continue;
+    }
       //TODO:ひとつもないorふたつ以上あったらエラー
-      let range = sheets[i].getRange("B:F")
-      for (let row = 2; row <= sheets[i].getLastRow(); row++){
-        if (range.getCell(row, 2).getValue() == answers.employeeNumber && range.getCell(row, 5).isBlank()){
-          range.getCell(row, 5).setValue(answers.backDate);
-        }
+    let range = sheets[i].getRange("B:F")
+    for (let row = 2; row <= sheets[i].getLastRow(); row++){
+      if (range.getCell(row, 2).getValue() == answers.employeeNumber && range.getCell(row, 5).isBlank()){
+        range.getCell(row, 5).setValue(answers.backDate);
       }
     }
   }
