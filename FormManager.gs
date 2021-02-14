@@ -55,7 +55,7 @@ function CreateNewForm() {
   for (let i = 0; i < triggerSheets.length; i++) {
     let sheetName = triggerSheets[i].getName();
     if (sheetName.indexOf("フォームの回答") >= 0) {
-        triggerSheets[i].setName(bookNumber + "貸出");
+        triggerSheets[i].setName(bookNumber + "-貸出");
         //TODO:フラグを立てて、２枚以上のシートが検索にヒットしたらエラー
     }
   }
@@ -78,7 +78,7 @@ function CreateNewForm() {
     let sheetName = triggerSheets[i].getName();
     if (sheetName.indexOf("フォームの回答") >= 0) {
         // flag++;
-        triggerSheets[i].setName(bookNumber + "返却");
+        triggerSheets[i].setName(bookNumber + "-返却");
         // triggerSheets[i].getRange(2,6).getCell(2,6).setValue(1);
         // Logger.log("入った！");
         // Logger.log(i);
