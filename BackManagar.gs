@@ -60,7 +60,7 @@ function InsertBackLogData(){
     // Logger.log(sheets[i]);
     // Logger.log(sheets[i].getName());
     if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
-      return;
+      continue;
     }
     //TODO:ひとつもないorふたつ以上あったらエラー
     let range = sheets[i].getRange("B:F")
