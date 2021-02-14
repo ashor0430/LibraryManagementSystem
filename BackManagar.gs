@@ -1,3 +1,44 @@
+function GetBackData(){
+  const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
+  const SHEETS = TriggerSS.getSheets();
+  let timestamp = [];
+  let sortedTimestamp = [];
+
+  for (let i = 0; i < SHEETS.length; i++){
+    if (SHEETS[i].getName().indexOf("貸出") >= 0){
+      timestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+      sortedTimestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+    } else if (SHEETS[i].getName().indexOf("返却")){
+      timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+      sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+    }
+  }
+
+  sortedTimestamp.sort(function(a, b) {return b - a;});
+ 
+  for (let i = 0; i < SHEETS.length; i++){
+    if (sortedTimestamp[0] == timestamp[i]){
+      var sheet = SHEETS[i];
+      var sheetName = SHEETS[i].getName().split("-");
+      var bookNumber = sheetName[0];
+    }
+  }
+
+  if (sheet.getName().indexOf("貸出")　>= 0){
+    return;
+  }
+  
+  let lastRow = sheet.getLastRow();
+  let range = sheet.getRange("B:D");
+
+  let answers = {};
+  answers.bookNumber = bookNumber;
+  answers.employeeName = range.getCell(lastRow, 1).getValue();
+  answers.employeeNumber = range.getCell(lastRow, 2).getValue();
+  answers.backDate = range.getCell(lastRow, 3).getValue();
+  Logger.log(answers);
+}
+
 function InsertBackLogData(){
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   let sheets = SS.getSheets();
