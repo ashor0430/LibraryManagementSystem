@@ -1,43 +1,59 @@
-function GetBackData(){
-  const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
-  const SHEETS = TriggerSS.getSheets();
-  let timestamp = [];
-  let sortedTimestamp = [];
-
-  for (let i = 0; i < SHEETS.length; i++){
-
-    if (SHEETS[i].getName().indexOf("貸出") >= 0){
- 
-      timestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
-      sortedTimestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
-
-    } else if (SHEETS[i].getName().indexOf("返却")){
-
-      timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
-      sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
-    
-    }
-  }
-
-  sortedTimestamp.sort(function(a, b) {return b - a;});
- 
-  for (let i = 0; i < SHEETS.length; i++){
-    if (sortedTimestamp[0] == timestamp[i]){
-      var sheet = SHEETS[i];
-      var sheetName = SHEETS[i].getName().split("-");
-      var bookNumber = sheetName[0];
-    }
-  }
-
-  if (sheet.getName().indexOf("貸出")　>= 0){
-    return;
-  }
+function BackBook(){
   
+  let bookData = {"bookNumber": 1, "sheetName" : "1-貸出"};//TODO:引数
+
+  let answers = GetBackData();
+
+  InsertBackLogData(answers);
+
+  ResetStatus(answers);
+
+  UpdateFormByBack(answers);
+}
+
+function GetBackData(bookData){
+  const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
+  // const SHEETS = TriggerSS.getSheets();
+  // let timestamp = [];
+  // let sortedTimestamp = [];
+
+  // for (let i = 0; i < SHEETS.length; i++){
+
+  //   if (SHEETS[i].getName().indexOf("貸出") >= 0){
+ 
+  //     timestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+  //     sortedTimestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+
+  //   } else if (SHEETS[i].getName().indexOf("返却")){
+
+  //     timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+  //     sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+    
+  //   }
+  // }
+
+  // sortedTimestamp.sort(function(a, b) {return b - a;});
+ 
+  // for (let i = 0; i < SHEETS.length; i++){
+  //   if (sortedTimestamp[0] == timestamp[i]){
+  //     var sheet = SHEETS[i];
+  //     var sheetName = SHEETS[i].getName().split("-");
+  //     var bookNumber = sheetName[0];
+  //   }
+  // }
+
+  // if (sheet.getName().indexOf("貸出")　>= 0){
+  //   return;
+  // }
+  // let bookData = {"bookNumber" : "1", "sheetName" : "1-返却"};//TODO:引数
+
+  let sheet = TriggerSS.getSheetByName(bookData.sheetName);
+
   let lastRow = sheet.getLastRow();
   let range = sheet.getRange("B:D");
 
   let answers = {};
-  answers.bookNumber = bookNumber;
+  answers.bookNumber = bookData.bookNumber;
   answers.employeeName = range.getCell(lastRow, 1).getValue();
   answers.employeeNumber = range.getCell(lastRow, 2).getValue();
   answers.backDate = range.getCell(lastRow, 3).getValue();
@@ -45,16 +61,16 @@ function GetBackData(){
   return answers;
 }
 
-function InsertBackLogData(){
+function InsertBackLogData(answers){
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   let sheets = SS.getSheets();
 
-  var answers = {
-    "bookNumber": 2,
-    "employeeName": "山田太郎",
-    "employeeNumber": 2222,
-    "backDate": new Date,
-  };//TODO:配列から取ってくる
+  // var answers = {
+  //   "bookNumber": 2,
+  //   "employeeName": "山田太郎",
+  //   "employeeNumber": 2222,
+  //   "backDate": new Date,
+  // };//TODO:配列から取ってくる
 
   for (let i = 2; i < sheets.length; i++){
     // Logger.log(sheets[i]);
@@ -74,13 +90,13 @@ function InsertBackLogData(){
 
 
 
-function ResetStatus(){
+function ResetStatus(answers){
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
   let range = STATUS_SHEET.getRange("A:G");
   let lastRow = STATUS_SHEET.getLastRow();
 
-  var answers = {"bookNumber": 3};
+  // var answers = {"bookNumber": 3};
 
   for (let i = 2; i <= lastRow; i++){
     if (range.getCell(i, 1).getValue() == answers.bookNumber){
@@ -91,13 +107,13 @@ function ResetStatus(){
   }
 }
 
-function UpdateFormByBack() {
+function UpdateFormByBack(answers) {
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
   let range = STATUS_SHEET.getRange("A:G");
   let lastRow = STATUS_SHEET.getLastRow();
 
-  var answers = {"bookNumber": 1};//TODO:配列から取ってくる
+  // var answers = {"bookNumber": 1};//TODO:配列から取ってくる
 
   for (let i = 2; i <= lastRow; i++){
     if (range.getCell(i, 1).getValue() == answers.bookNumber){

@@ -1,3 +1,42 @@
+  // const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
+  // const SHEETS = TriggerSS.getSheets();
+  // let timestamp = [];
+  // let sortedTimestamp = [];
+
+  // for (let i = 0; i < SHEETS.length; i++){
+  //   if (SHEETS[i].getName().indexOf("貸出") >= 0){
+  //     // Logger.log(i);
+  //     // Logger.log(SHEETS[i].getRange(2, 1).getCell(1,1).getValue());
+  //     timestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+  //     sortedTimestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+  //   } else if (SHEETS[i].getName().indexOf("返却")){
+  //     // Logger.log(i);
+  //     // Logger.log(SHEETS[i].getRange(2, 1).getCell(1,1).getValue());
+  //     // timestamp[0] = 6;
+  //     timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+  //     sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+  //   }
+  // }
+  // // let originalTimestamp = timestamp;
+  // // Logger.log(timestamp);
+  // // Logger.log(sortedTimestamp);
+  // sortedTimestamp.sort(function(a, b) {return b - a;});
+  // // Logger.log(timestamp);
+  // // Logger.log(sortedTimestamp);
+
+  // for (let i = 0; i < SHEETS.length; i++){
+  //   if (sortedTimestamp[0] == timestamp[i]){
+  //     // Logger.log(sortedTimestamp[0]);
+  //     // Logger.log(i);
+  //     // Logger.log(timestamp[i]);
+  //     var sheet = SHEETS[i];
+  //     var sheetName = SHEETS[i].getName().split("-");
+  //     var bookNumber = sheetName[0];
+  //   }
+  // }
+
+
+
 function CreateNewForm() {
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
