@@ -1,4 +1,4 @@
-function GetBorrowData(e){
+function GetBorrowData(){
   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
   const SHEETS = TriggerSS.getSheets();
   let timestamp = [];
