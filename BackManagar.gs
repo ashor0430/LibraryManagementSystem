@@ -5,17 +5,12 @@ function GetBackData(){
   let sortedTimestamp = [];
 
   for (let i = 0; i < SHEETS.length; i++){
-
     if (SHEETS[i].getName().indexOf("貸出") >= 0){
- 
       timestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
       sortedTimestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
-
     } else if (SHEETS[i].getName().indexOf("返却")){
-
       timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
       sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
-    
     }
   }
 
