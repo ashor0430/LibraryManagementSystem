@@ -1,39 +1,71 @@
-  // const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
-  // const SHEETS = TriggerSS.getSheets();
-  // let timestamp = [];
-  // let sortedTimestamp = [];
+function ManageLibrary(){
+  const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
+  const SHEETS = TriggerSS.getSheets();
+  let timestamp = [];
+  let sortedTimestamp = [];
+  let bookData = {};
 
-  // for (let i = 0; i < SHEETS.length; i++){
-  //   if (SHEETS[i].getName().indexOf("貸出") >= 0){
-  //     // Logger.log(i);
-  //     // Logger.log(SHEETS[i].getRange(2, 1).getCell(1,1).getValue());
-  //     timestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
-  //     sortedTimestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
-  //   } else if (SHEETS[i].getName().indexOf("返却")){
-  //     // Logger.log(i);
-  //     // Logger.log(SHEETS[i].getRange(2, 1).getCell(1,1).getValue());
-  //     // timestamp[0] = 6;
-  //     timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
-  //     sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
-  //   }
-  // }
-  // // let originalTimestamp = timestamp;
-  // // Logger.log(timestamp);
-  // // Logger.log(sortedTimestamp);
-  // sortedTimestamp.sort(function(a, b) {return b - a;});
-  // // Logger.log(timestamp);
-  // // Logger.log(sortedTimestamp);
+  for (let i = 0; i < SHEETS.length; i++){
+    // if (SHEETS[i].getName().indexOf("貸出") >= 0){
+    //   // Logger.log(i);
+    //   // Logger.log(SHEETS[i].getRange(2, 1).getCell(1,1).getValue());
+    //   timestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+    //   sortedTimestamp[i] = SHEETS[i].getRange(2, 1).getCell(1,1).getValue();
+    // } else if (SHEETS[i].getName().indexOf("返却")){
+    //   // Logger.log(i);
+    //   // Logger.log(SHEETS[i].getRange(2, 1).getCell(1,1).getValue());
+    //   // timestamp[0] = 6;
+    //   if (SHEETS[i].getLastRow() == 1){
+    //     timestamp[i] = 0;
+    //   } else{
+    //   timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+    //   sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+    //   }
 
-  // for (let i = 0; i < SHEETS.length; i++){
-  //   if (sortedTimestamp[0] == timestamp[i]){
-  //     // Logger.log(sortedTimestamp[0]);
-  //     // Logger.log(i);
-  //     // Logger.log(timestamp[i]);
-  //     var sheet = SHEETS[i];
-  //     var sheetName = SHEETS[i].getName().split("-");
-  //     var bookNumber = sheetName[0];
-  //   }
-  // }
+    if (SHEETS[i].getLastRow() == 1){
+      timestamp[i] = 0;
+    } else{
+　    timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+      sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+  　}
+  }
+  // let originalTimestamp = timestamp;
+  // Logger.log(timestamp);
+  // Logger.log(sortedTimestamp);
+  sortedTimestamp.sort(function(a, b) {return b - a;});
+   Logger.log("timestamp"+timestamp);
+   Logger.log("sortedTimestamp"+sortedTimestamp);
+   Logger.log("timestamp[5]（今回の最新のタイムスタンプ）"+timestamp[5]);
+   Logger.log("sortedTimestamp[0]（並び変えて先頭＝最新のタイムスタンプ）"+sortedTimestamp[0]);
+   Logger.log("SHEETS.length..."+SHEETS.length);
+
+  for (let i = 0; i < SHEETS.length; i++){
+  　Logger.log("i..."+i);
+   Logger.log("sortedTimestamp[0]"+sortedTimestamp[0]);
+   Logger.log("timestamp[i]"+timestamp[i]);
+
+    if (sortedTimestamp[0].toString() == timestamp[i].toString()){
+      Logger.log("入った"+i);
+      Logger.log(sortedTimestamp[0]);
+      Logger.log(timestamp[i]);
+      var triggerSheet = SHEETS[i]; 
+      bookData.sheetName = triggerSheet.getName();
+      var sheetNameSplit = triggerSheet.getName().split("-");
+      bookData.bookNumber = sheetNameSplit[0];
+    }
+  }
+  Logger.log(bookData.sheetName);
+  Logger.log(bookData.bookNumber);
+  Logger.log(bookData.sheetName.indexOf());
+  if (bookData.sheetName.indexOf("貸出")　>= 0){
+    Logger.log("borrowIn");
+    BorrowBook(bookData);
+  } else if(bookData.sheetName.indexOf("返却")　>= 0){
+    Logger.log("backIn");
+    BackBook(bookData);
+  }
+
+}
 
 
 
