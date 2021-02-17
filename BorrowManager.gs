@@ -1,6 +1,7 @@
-function BorrowBook(){
-
-  let bookData = {"bookNumber": 1, "sheetName" : "1-貸出"};//TODO:引数
+function BorrowBook(bookData){
+  // Logger.log(bookData);
+  
+  // let bookData = {"bookNumber": 4, "sheetName" : "4-貸出"};//TODO:引数
 
   let answers = GetBorrowData(bookData);
 
@@ -60,23 +61,44 @@ function GetBorrowData(bookData){
 
   let sheet = TriggerSS.getSheetByName(bookData.sheetName);
 
-  let lastColomn = sheet.getLastColumn();
-  let range = sheet.getRange(2, lastColomn - 3, 1, 4);
+  // let lastColomn = sheet.getLastColumn();
+  // let range = sheet.getRange(2, lastColomn - 3, 1, 4);
 
+  // let answers = {};
+  // answers.bookNumber = bookData.bookNumber;
+  // answers.employeeName = range.getCell(1, 1).getValue();
+  // answers.employeeNumber = range.getCell(1, 2).getValue();
+  // answers.borrowDate = range.getCell(1, 3).getValue();
+  // answers.backDeadline = range.getCell(1, 4).getValue();
+  // Logger.log(sheet.getRange(6,1).getCell(1,1).getValue());
+  let lastRow = sheet.getLastRow();
+  // Logger.log(lastRow);
+  let range = sheet.getRange(lastRow, 2, 1, sheet.getLastColumn());
+  // Logger.log(sheet.getLastColumn());
+  let col = 1;
+  Logger.log("cell(1, col).getValue + " + range.getCell(1, col).getValue());
+  while (range.getCell(1, col).isBlank()){
+    Logger.log("while in");
+    Logger.log(col);
+    Logger.log(range.getCell(1, col).getValue());
+    Logger.log(range.getCell(1, col).isBlank());
+    col++
+  }
+  Logger.log(col);
   let answers = {};
   answers.bookNumber = bookData.bookNumber;
-  answers.employeeName = range.getCell(1, 1).getValue();
-  answers.employeeNumber = range.getCell(1, 2).getValue();
-  answers.borrowDate = range.getCell(1, 3).getValue();
-  answers.backDeadline = range.getCell(1, 4).getValue();
-   Logger.log(answers);
+  answers.employeeName = range.getCell(1, col).getValue();
+  answers.employeeNumber = range.getCell(1, col + 1).getValue();
+  answers.borrowDate = range.getCell(1, col + 2).getValue();
+  answers.backDeadline = range.getCell(1, col + 3).getValue();
+  Logger.log(answers);
   return answers;
 }
 
 
 function InsertBorrowLogData(answers){
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
-  let sheets = SS.getSheets();
+  let sheet = SS.getSheetByName(answers.bookNumber);
 
   // var answers = {
   //   "bookNumber": 1,
@@ -86,21 +108,21 @@ function InsertBorrowLogData(answers){
   //   "backDeadline": new Date
   // };//TODO:配列から取ってくる
 
-  for (let i = 2; i < sheets.length; i++){
+  // for (let i = 2; i < sheets.length; i++){
     // Logger.log(sheets[i]);
     // Logger.log(sheets[i].getName());
-    if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
-      return;
-    }
+    // if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
+      // return;
+    // }
     //TODO:ひとつもないorふたつ以上あったらエラー
-    let range = sheets[i].getRange("B:E")
-    let lastRow = sheets[i].getLastRow();
+    let range = sheet.getRange("B:E")
+    let lastRow = sheet.getLastRow();
     range.getCell(lastRow +1, 1).setValue(answers.employeeName);
     range.getCell(lastRow +1, 2).setValue(answers.employeeNumber);
     range.getCell(lastRow +1, 3).setValue(answers.borrowDate);
     range.getCell(lastRow +1, 4).setValue(answers.backDeadline);
   
-  }
+  // }
 }
 
 function ResisterStatus(answers){

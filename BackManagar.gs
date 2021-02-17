@@ -1,8 +1,8 @@
-function BackBook(){
+function BackBook(bookData){
   
-  let bookData = {"bookNumber": 1, "sheetName" : "1-貸出"};//TODO:引数
+  // let bookData = {"bookNumber": 1, "sheetName" : "1-貸出"};//TODO:引数
 
-  let answers = GetBackData();
+  let answers = GetBackData(bookData);
 
   InsertBackLogData(answers);
 
@@ -62,9 +62,11 @@ function GetBackData(bookData){
 }
 
 function InsertBackLogData(answers){
+  // var answers = {"bookNumber" : 1}
+  // Logger.log(answers.bookNumber);
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
-  let sheets = SS.getSheets();
-
+  let sheet = SS.getSheetByName(answers.bookNumber);
+  // Logger.log(sheets.getName());
   // var answers = {
   //   "bookNumber": 2,
   //   "employeeName": "山田太郎",
@@ -72,20 +74,20 @@ function InsertBackLogData(answers){
   //   "backDate": new Date,
   // };//TODO:配列から取ってくる
 
-  for (let i = 2; i < sheets.length; i++){
+  // for (let i = 2; i < sheets.length; i++){
     // Logger.log(sheets[i]);
     // Logger.log(sheets[i].getName());
-    if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
-      continue;
-    }
+    // if (sheets[i].getName().indexOf(answers.bookNumber) < 0){
+      // continue;
+    // }
     //TODO:ひとつもないorふたつ以上あったらエラー
-    let range = sheets[i].getRange("B:F")
-    for (let row = 2; row <= sheets[i].getLastRow(); row++){
+    let range = sheet.getRange("B:F");
+    for (let row = 2; row <= sheet.getLastRow(); row++){
       if (range.getCell(row, 2).getValue() == answers.employeeNumber && range.getCell(row, 5).isBlank()){
         range.getCell(row, 5).setValue(answers.backDate);
       }
     }
-  }
+  // }
 }
 
 
