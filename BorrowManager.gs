@@ -124,16 +124,27 @@ function InsertBorrowLogData(answers, SS){
 }
 
 function ResisterStatus(answers, SS){
+  // var answers = {
+  // "bookNumber": 1,
+  // "employeeName": "山田太郎",
+  // "employeeNumber": 0000,
+  // "borrowDate": new Date,
+  // "backDeadline": new Date
+  // };//TODO:配列から取ってくる
+
+  // const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+
+  let error = {};
+  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  error.book = answers.bookNumber +"-貸出";
+  error.employeeName = answers.employeeName;
+  error.employeeNumber = answers.employeeNumber;
+  error.formAnswer1 = answers.borrowDate;
+  error.formAnswer2 = answers.backDeadline;
+  error.where = "ResisterStatus(BorrowManager)";
+  
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
   if (STATUS_SHEET == null || STATUS_SHEET == ""){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber +"-貸出";
-    error.employeeName = answers.employeeName;
-    error.employeeNumber = answers.employeeNumber;
-    error.formAnswer1 = answers.borrowDate;
-    error.formAnswer2 = answers.backDeadline;
-    error.where = "UpdateFormByBorrow(BorrowManager)";
     error.what = "スプレッドシート「図書貸出管理」内，「貸出状況」シートの名前が間違っています";
     InsertError(error);
     return;
@@ -142,22 +153,25 @@ function ResisterStatus(answers, SS){
   let range = STATUS_SHEET.getRange("A:G");
   let lastRow = STATUS_SHEET.getLastRow();
 
-  // var answers = {
-  //   "bookNumber": 1,
-  //   "employeeName": "山田太郎",
-  //   "employeeNumber": 0000,
-  //   "borrowDate": new Date,
-  //   "backDeadline": new Date
-  // };//TODO:配列から取ってくる
-
+  let flag = 0;
   for (let i = 2; i <= lastRow; i++){
     if (range.getCell(i, 1).getValue() == answers.bookNumber){
-      //TODO:ひとつもないorふたつ以上あったらエラー
+      if (flag > 0){
+        error.what = "「貸出状況」シートから書籍番号" + answers.bookNumber + "が２か所以上見つかりました";
+        InsertError(error);
+        return;
+      }
       range.getCell(i, 3).setValue(answers.employeeName);
       range.getCell(i, 4).setValue(answers.employeeNumber);
       range.getCell(i, 5).setValue(answers.borrowDate);
       range.getCell(i, 6).setValue(answers.backDeadline);
+      flag++;
     }
+  }
+  if (flag == 0){
+    error.what = "「貸出状況」シートから書籍番号が見つかりませんでした";
+    InsertError(error);
+    return;
   }
 }
 
