@@ -183,7 +183,7 @@ function UpdateFormByBorrow(answers){
   if (STATUS_SHEET == null || STATUS_SHEET == ""){
     let error = {};
     error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber;
+    error.book = answers.bookNumber +"-貸出";
     error.employeeName = answers.employeeName;
     error.employeeNumber = answers.employeeNumber;
     error.formAnswer1 = answers.borrowDate;
@@ -234,7 +234,7 @@ function UpdateFormByBorrow(answers){
         return;
       }
       var formId = range.getCell(i, 7).getValue();
-      flag++
+      flag++;
     }
   }
   if (flag == 0){
