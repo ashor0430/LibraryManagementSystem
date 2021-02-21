@@ -123,16 +123,16 @@ function InsertBorrowLogData(answers, SS){
   // }
 }
 
-function ResisterStatus(){
-  var answers = {
-  "bookNumber": 1,
-  "employeeName": "山田太郎",
-  "employeeNumber": 0000,
-  "borrowDate": new Date,
-  "backDeadline": new Date
-  };//TODO:配列から取ってくる
+function ResisterStatus(answers, SS){
+  // var answers = {
+  // "bookNumber": 1,
+  // "employeeName": "山田太郎",
+  // "employeeNumber": 0000,
+  // "borrowDate": new Date,
+  // "backDeadline": new Date
+  // };//TODO:配列から取ってくる
 
-  const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+  // const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
 
   let error = {};
   error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
