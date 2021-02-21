@@ -62,10 +62,35 @@ function GetBackData(bookData){
 }
 
 function InsertBackLogData(answers, SS){
+//  var answers = {
+//   "bookNumber": 1,
+//   "employeeName": "山田太郎",
+//   "employeeNumber": 1111,
+//   "borrowDate": new Date,
+//   "backDeadline": new Date
+//   };//TODO:配列から取ってくる
+
+//   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+
+  let error = {};
+  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  error.book = answers.bookNumber　+ "-返却";
+  error.employeeName = answers.employeeName;
+  error.employeeNumber = answers.employeeNumber;
+  error.formAnswer1 = answers.borrowDate;
+  error.formAnswer2 = answers.backDeadline;
+  error.where = "InsertBackLogData(BackManager)";
+
   // var answers = {"bookNumber" : 1}
   // Logger.log(answers.bookNumber);
 
   let sheet = SS.getSheetByName(answers.bookNumber);
+  if (sheet == null || sheet == ""){
+    error.what = "貸出履歴シート「" + answers.bookNumber + "」の取得に失敗しました";
+    InsertError(error);
+    return;
+  }
+
   // Logger.log(sheets.getName());
   // var answers = {
   //   "bookNumber": 2,
@@ -81,12 +106,25 @@ function InsertBackLogData(answers, SS){
       // continue;
     // }
     //TODO:ひとつもないorふたつ以上あったらエラー
-    let range = sheet.getRange("B:F");
-    for (let row = 2; row <= sheet.getLastRow(); row++){
-      if (range.getCell(row, 2).getValue() == answers.employeeNumber && range.getCell(row, 5).isBlank()){
-        range.getCell(row, 5).setValue(answers.backDate);
+  let range = sheet.getRange("B:F");
+  let flag = 0;
+  for (let row = 2; row <= sheet.getLastRow(); row++){
+    if (range.getCell(row, 2).getValue() == answers.employeeNumber && range.getCell(row, 5).isBlank()){
+      if (flag > 0){
+        error.what = "こちらの社員番号による，返却のない貸出記録が２か所以上見つかりました";
+        InsertError(error);
+        return;
       }
+      range.getCell(row, 5).setValue(answers.backDate);
+      flag++;
     }
+  }
+  if (flag == 0){
+    error.what = "こちらの社員番号による，返却のない貸出記録が見つかりませんでした";
+    InsertError(error);
+    return;
+  }
+
   // }
 }
 
