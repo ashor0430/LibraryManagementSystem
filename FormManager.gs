@@ -5,6 +5,24 @@ function ManageLibrary(){
   let sortedTimestamp = [];
   let bookData = {};
 
+  try {
+    const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+  }
+  catch (e) {
+    let error = {};
+    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+    error.book = answers.bookNumber +"-返却";
+    error.employeeName = answers.employeeName;
+    error.employeeNumber = answers.employeeNumber;
+    error.formAnswer1 = answers.borrowDate;
+    error.formAnswer2 = answers.backDeadline;
+    error.where = "ManageLibrary(FormManager)";
+    error.what = "スプレッドシート「図書貸出管理」のIDが間違っています";
+    InsertError(error);
+    return;
+  }
+  const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+
   for (let i = 0; i < SHEETS.length; i++){
     // if (SHEETS[i].getName().indexOf("貸出") >= 0){
     //   // Logger.log(i);
@@ -59,10 +77,10 @@ function ManageLibrary(){
   Logger.log(bookData.sheetName.indexOf());
   if (bookData.sheetName.indexOf("貸出")　>= 0){
     Logger.log("borrowIn");
-    BorrowBook(bookData);
+    BorrowBook(bookData, SS);
   } else if(bookData.sheetName.indexOf("返却")　>= 0){
     Logger.log("backIn");
-    BackBook(bookData);
+    BackBook(bookData, SS);
   }
 
 }
@@ -70,18 +88,19 @@ function ManageLibrary(){
 
 
 function CreateNewForm() {
+  let error = {};
+  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  error.employeeName = "";
+  error.employeeNumber = "";
+  error.formAnswer1 = "";
+  error.formAnswer2 = "";
+
   try {
     const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   }
   catch (e) {
     // Logger.log("error");
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = "";
-    error.employeeName = "";
-    error.employeeNumber = "";
-    error.formAnswer1 = "";
-    error.formAnswer2 = "";
     error.where = "CreateNewForm(FormManager)";
     error.what = "スプレッドシート「図書貸出管理」のIDが間違っています";
     InsertError(error);
@@ -93,13 +112,7 @@ function CreateNewForm() {
   
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
   if (STATUS_SHEET == null){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = "";
-    error.employeeName = "";
-    error.employeeNumber = "";
-    error.formAnswer1 = "";
-    error.formAnswer2 = "";
     error.where = "CreateNewForm(FormManager)";
     error.what = "スプレッドシート「図書貸出管理」内，「貸出状況」シートの名前が間違っています";
     InsertError(error);
@@ -109,15 +122,10 @@ function CreateNewForm() {
   let lastRow = STATUS_SHEET.getLastRow();
 
   let bookNumber = range.getCell(lastRow, 1).getValue();
-  Logger.log(bookNumber);
+  // Logger.log(bookNumber);
   if (bookNumber == ""){
     let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = bookNumber;
-    error.employeeName = "";
-    error.employeeNumber = "";
-    error.formAnswer1 = "";
-    error.formAnswer2 = "";
     error.where = "CreateNewForm(FormManager)";
     error.what = "書籍番号がありません";
     InsertError(error);
@@ -127,12 +135,7 @@ function CreateNewForm() {
   let bookTitle = range.getCell(lastRow, 2).getValue();
   if (bookTitle == ""){
     let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = bookNumber;
-    error.employeeName = "";
-    error.employeeNumber = "";
-    error.formAnswer1 = "";
-    error.formAnswer2 = "";
     error.where = "CreateNewForm(FormManager)";
     error.what = "タイトルがありません";
     InsertError(error);
@@ -159,13 +162,7 @@ function CreateNewForm() {
     DriveApp.getRootFolder().removeFile(borrowFormFile);
   }
   catch (e) {
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = bookNumber　+"-貸出";
-    error.employeeName = "";
-    error.employeeNumber = "";
-    error.formAnswer1 = "";
-    error.formAnswer2 = "";
     error.where = "CreateNewForm(FormManager)";
     error.what = "フォームフォルダのIDが間違っています";
     InsertError(error);
@@ -195,13 +192,7 @@ function CreateNewForm() {
 
   }
   catch (e) {
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = bookNumber　+"-返却";
-    error.employeeName = "";
-    error.employeeNumber = "";
-    error.formAnswer1 = "";
-    error.formAnswer2 = "";
     error.where = "CreateNewForm(FormManager)";
     error.what = "フォームフォルダのIDが間違っています";
     InsertError(error);
@@ -223,13 +214,7 @@ function CreateNewForm() {
   for (let i = 0; i < triggerSheets.length; i++) {
     if (triggerSheets[i].getName() == bookNumber +"-貸出"){
       // Logger.log("in「5-貸出」は既に存在しています")
-      let error = {};
-      error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
       error.book = bookNumber +"-貸出";
-      error.employeeName = "";
-      error.employeeNumber = "";
-      error.formAnswer1 = "";
-      error.formAnswer2 = "";
       error.where = "CreateNewForm(FormManager)";
       error.what = "フォームと紐づけられた「" + bookNumber + "-貸出」シートは既に存在しています。";
       InsertError(error);
@@ -237,13 +222,7 @@ function CreateNewForm() {
     }
     if (triggerSheets[i].getName() == bookNumber +"-返却"){
       // Logger.log("in「5-返却」は既に存在しています")
-      let error = {};
-      error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
       error.book = bookNumber +"-返却";
-      error.employeeName = "";
-      error.employeeNumber = "";
-      error.formAnswer1 = "";
-      error.formAnswer2 = "";
       error.where = "CreateNewForm(FormManager)";
       error.what = "フォームと紐づけられた「" + bookNumber + "-返却」シートは既に存在しています。";
       InsertError(error);
@@ -257,13 +236,7 @@ function CreateNewForm() {
     
     if (triggerSheets[i].getName().indexOf("フォームの回答") >= 0) {
       if (flag > 0){
-        let error = {};
-        error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
         error.book = bookNumber +"-貸出";
-        error.employeeName = "";
-        error.employeeNumber = "";
-        error.formAnswer1 = "";
-        error.formAnswer2 = "";
         error.where = "CreateNewForm(FormManager)";
         error.what = "（貸出シートを紐づけ）新しいシートが２枚以上あります";
         InsertError(error);
@@ -275,13 +248,7 @@ function CreateNewForm() {
   }
   // flag = 0
   if (flag == 0){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = bookNumber +"-貸出";
-    error.employeeName = "";
-    error.employeeNumber = "";
-    error.formAnswer1 = "";
-    error.formAnswer2 = "";
     error.where = "CreateNewForm(FormManager)";
     error.what = "（貸出シートを紐づけ）新しいシートがありません";
     InsertError(error);
@@ -303,13 +270,7 @@ function CreateNewForm() {
   for (let i = 0; i < triggerSheets.length; i++) {
     if (triggerSheets[i].getName().indexOf("フォームの回答") >= 0) {
       if (flag > 0){
-        let error = {};
-        error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
         error.book = bookNumber +"-返却";
-        error.employeeName = "";
-        error.employeeNumber = "";
-        error.formAnswer1 = "";
-        error.formAnswer2 = "";
         error.where = "CreateNewForm(FormManager)";
         error.what = "（返却シートを紐づけ）新しいシートが２枚以上あります";
         InsertError(error);
@@ -321,13 +282,7 @@ function CreateNewForm() {
   }
   // flag = 0
   if (flag == 0){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = bookNumber +"-返却";
-    error.employeeName = "";
-    error.employeeNumber = "";
-    error.formAnswer1 = "";
-    error.formAnswer2 = "";
     error.where = "CreateNewForm(FormManager)";
     error.what = "（返却シートを紐づけ）新しいシートがありません";
     InsertError(error);
