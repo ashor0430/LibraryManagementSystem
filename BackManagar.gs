@@ -1,14 +1,14 @@
-function BackBook(bookData){
+function BackBook(bookData, SS){
   
   // let bookData = {"bookNumber": 1, "sheetName" : "1-貸出"};//TODO:引数
 
   let answers = GetBackData(bookData);
 
-  InsertBackLogData(answers);
+  InsertBackLogData(answers, SS);
 
-  ResetStatus(answers);
+  ResetStatus(answers, SS);
 
-  UpdateFormByBack(answers);
+  UpdateFormByBack(answers, SS);
 }
 
 function GetBackData(bookData){
@@ -61,10 +61,10 @@ function GetBackData(bookData){
   return answers;
 }
 
-function InsertBackLogData(answers){
+function InsertBackLogData(answers, SS){
   // var answers = {"bookNumber" : 1}
   // Logger.log(answers.bookNumber);
-  const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+
   let sheet = SS.getSheetByName(answers.bookNumber);
   // Logger.log(sheets.getName());
   // var answers = {
@@ -92,8 +92,7 @@ function InsertBackLogData(answers){
 
 
 
-function ResetStatus(answers){
-  const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+function ResetStatus(answers, SS){
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
   let range = STATUS_SHEET.getRange("A:G");
   let lastRow = STATUS_SHEET.getLastRow();
@@ -109,34 +108,19 @@ function ResetStatus(answers){
   }
 }
 
-function UpdateFormByBack(answers) {
-  try {
-    const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
-  }
-  catch (e) {
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber +"-返却";
-    error.employeeName = answers.employeeName;
-    error.employeeNumber = answers.employeeNumber;
-    error.formAnswer1 = answers.borrowDate;
-    error.formAnswer2 = answers.backDeadline;
-    error.where = "UpdateFormByBack(BackManager)";
-    error.what = "スプレッドシート「図書貸出管理」のIDが間違っています";
-    InsertError(error);
-    return;
-  }
-  const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+function UpdateFormByBack(answers, SS) {
+
+  let error = {};
+  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  error.book = answers.bookNumber　+ "-返却";
+  error.employeeName = answers.employeeName;
+  error.employeeNumber = answers.employeeNumber;
+  error.formAnswer1 = answers.borrowDate;
+  error.formAnswer2 = answers.backDeadline;
+  error.where = "UpdateFormByBack(BackManager)";
+
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
   if (STATUS_SHEET == null || STATUS_SHEET == ""){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber　+ "-返却";
-    error.employeeName = answers.employeeName;
-    error.employeeNumber = answers.employeeNumber;
-    error.formAnswer1 = answers.borrowDate;
-    error.formAnswer2 = answers.backDeadline;
-    error.where = "UpdateFormByBack(BackManager)";
     error.what = "スプレッドシート「図書貸出管理」内，「貸出状況」シートの名前が間違っています";
     InsertError(error);
     return;
@@ -146,14 +130,6 @@ function UpdateFormByBack(answers) {
 
   // var answers = {"bookNumber": 1};//TODO:配列から取ってくる
   if (answers.bookNumber == null || answers.bookNumber == ""){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber + "-貸出";
-    error.employeeName = answers.employeeName;
-    error.employeeNumber = answers.employeeNumber;
-    error.formAnswer1 = answers.borrowDate;
-    error.formAnswer2 = answers.backDeadline;
-    error.where = "UpdateFormByBorrow(BorrowManager)";
     error.what = "answersが取得できませんでした";
     InsertError(error);
     return;
@@ -163,14 +139,6 @@ function UpdateFormByBack(answers) {
   for (let i = 2; i <= lastRow; i++){
     if (range.getCell(i, 1).getValue() == answers.bookNumber){
       if (flag > 0){
-        let error = {};
-        error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-        error.book = answers.bookNumber + "-貸出";
-        error.employeeName = answers.employeeName;
-        error.employeeNumber = answers.employeeNumber;
-        error.formAnswer1 = answers.borrowDate;
-        error.formAnswer2 = answers.backDeadline;
-        error.where = "UpdateFormByBorrow(BorrowManager)";
         error.what = "「貸出状況」シートから書籍番号" + answers.bookNumber + "が２か所以上見つかりました";
         InsertError(error);
         return;
@@ -180,27 +148,11 @@ function UpdateFormByBack(answers) {
     }
   }
   if (flag == 0){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber + "-貸出";
-    error.employeeName = answers.employeeName;
-    error.employeeNumber = answers.employeeNumber;
-    error.formAnswer1 = answers.borrowDate;
-    error.formAnswer2 = answers.backDeadline;
-    error.where = "UpdateFormByBorrow(BorrowManager)";
     error.what = "「貸出状況」シートから書籍番号が見つかりませんでした";
     InsertError(error);
     return;
   }
   if (formId == null || formId == ""){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber + "-貸出";
-    error.employeeName = answers.employeeName;
-    error.employeeNumber = answers.employeeNumber;
-    error.formAnswer1 = answers.borrowDate;
-    error.formAnswer2 = answers.backDeadline;
-    error.where = "UpdateFormByBorrow(BorrowManager)";
     error.what = "「貸出状況」シートにフォームIDがありません";
     InsertError(error);
     return;
@@ -208,14 +160,6 @@ function UpdateFormByBack(answers) {
 
   var form = FormApp.openById(formId);
   if (form == null || form == ""){
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber + "-貸出";
-    error.employeeName = answers.employeeName;
-    error.employeeNumber = answers.employeeNumber;
-    error.formAnswer1 = answers.borrowDate;
-    error.formAnswer2 = answers.backDeadline;
-    error.where = "UpdateFormByBorrow(BorrowManager)";
     error.what = "「貸出状況」シートのフォームIDが間違っています";
     InsertError(error);
     return;
