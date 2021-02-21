@@ -1,13 +1,13 @@
-function InsertError() {
-  let error = {};//TODO:引数
-  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-  error.book = 1 + "貸出";
-  error.employeeName = "山田太郎";
-  error.employeeNumber = 1111;
-  error.formAnswer1 = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-  error.formAnswer2 = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-  error.where = "xxx";
-  error.what = "こんなエラーが起こりました";
+function InsertError(error) {
+  // let error = {};//TODO:引数
+  // error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  // error.book = 1 + "貸出";
+  // error.employeeName = "山田太郎";
+  // error.employeeNumber = 1111;
+  // error.formAnswer1 = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  // error.formAnswer2 = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  // error.where = "xxx";
+  // error.what = "こんなエラーが起こりました";
 
   
   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
