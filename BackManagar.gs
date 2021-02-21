@@ -104,7 +104,6 @@ function ResetStatus(answers, SS){
 
 //   const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
 
-
   let error = {};
   error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
   error.book = answers.bookNumber　+ "-返却";

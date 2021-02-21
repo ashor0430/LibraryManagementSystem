@@ -96,15 +96,30 @@ function GetBorrowData(bookData){
 
 
 function InsertBorrowLogData(answers, SS){
-  let sheet = SS.getSheetByName(answers.bookNumber);
-
   // var answers = {
   //   "bookNumber": 1,
   //   "employeeName": "山田太郎",
-  //   "employeeNumber": 0000,
+  //   "employeeNumber": 1111,
   //   "borrowDate": new Date,
   //   "backDeadline": new Date
   // };//TODO:配列から取ってくる
+  // const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
+
+  let error = {};
+  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  error.book = answers.bookNumber +"-貸出";
+  error.employeeName = answers.employeeName;
+  error.employeeNumber = answers.employeeNumber;
+  error.formAnswer1 = answers.borrowDate;
+  error.formAnswer2 = answers.backDeadline;
+  error.where = "InsertBorrowLogData(BorrowManager)";
+
+  let sheet = SS.getSheetByName(answers.bookNumber);
+  if (sheet == null || sheet == ""){
+    error.what = "貸出履歴シート「" + answers.bookNumber + "」の取得に失敗しました";
+    InsertError(error);
+    return;
+  }
 
   // for (let i = 2; i < sheets.length; i++){
     // Logger.log(sheets[i]);
@@ -113,12 +128,13 @@ function InsertBorrowLogData(answers, SS){
       // return;
     // }
     //TODO:ひとつもないorふたつ以上あったらエラー
-    let range = sheet.getRange("B:E")
-    let lastRow = sheet.getLastRow();
-    range.getCell(lastRow +1, 1).setValue(answers.employeeName);
-    range.getCell(lastRow +1, 2).setValue(answers.employeeNumber);
-    range.getCell(lastRow +1, 3).setValue(answers.borrowDate);
-    range.getCell(lastRow +1, 4).setValue(answers.backDeadline);
+
+  let range = sheet.getRange("B:E")
+  let lastRow = sheet.getLastRow();
+  range.getCell(lastRow +1, 1).setValue(answers.employeeName);
+  range.getCell(lastRow +1, 2).setValue(answers.employeeNumber);
+  range.getCell(lastRow +1, 3).setValue(answers.borrowDate);
+  range.getCell(lastRow +1, 4).setValue(answers.backDeadline);
   
   // }
 }
