@@ -91,10 +91,8 @@ function CreateNewForm() {
 
   // Logger.log(SS.getName());
   
-  try {
-    const STATUS_SHEET = SS.getSheetByName("貸出状況");
-  }
-  catch (e) {
+  const STATUS_SHEET = SS.getSheetByName("貸出状況");
+  if (STATUS_SHEET == null){
     let error = {};
     error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
     error.book = "";
@@ -107,7 +105,6 @@ function CreateNewForm() {
     InsertError(error);
     return;
   }
-  const STATUS_SHEET = SS.getSheetByName("貸出状況");
   let range = STATUS_SHEET.getRange("A:G");
   let lastRow = STATUS_SHEET.getLastRow();
 
