@@ -13,7 +13,14 @@ function BorrowBook(bookData, SS){
 }
 
 function GetBorrowData(bookData){
-   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
+  // let bookData = {"bookNumber" : 1, "sheetName" : "1-貸出"}
+
+  let error = {};
+  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  error.book = bookData.bookNumber +"-貸出";
+  error.where = "InsertBorrowLogData(BorrowManager)";
+
+  const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
   // const SHEETS = TriggerSS.getSheets();
   // let timestamp = [];
   // let sortedTimestamp = [];
@@ -60,6 +67,7 @@ function GetBorrowData(bookData){
 
   let sheet = TriggerSS.getSheetByName(bookData.sheetName);
 
+
   // let lastColomn = sheet.getLastColumn();
   // let range = sheet.getRange(2, lastColomn - 3, 1, 4);
 
@@ -75,22 +83,45 @@ function GetBorrowData(bookData){
   let range = sheet.getRange(lastRow, 2, 1, sheet.getLastColumn());
   // Logger.log(sheet.getLastColumn());
   let col = 1;
-  Logger.log("cell(1, col).getValue + " + range.getCell(1, col).getValue());
+  // Logger.log("cell(1, col).getValue + " + range.getCell(1, col).getValue());
   while (range.getCell(1, col).isBlank()){
-    Logger.log("while in");
-    Logger.log(col);
-    Logger.log(range.getCell(1, col).getValue());
-    Logger.log(range.getCell(1, col).isBlank());
+    if (col >= sheet.getLastColumn()){
+      error.employeeName = "";
+      error.employeeNumber = "";
+      error.formAnswer1 = "";
+      error.formAnswer2 = "";
+      error.what = "フォームの回答がありません（トリガーシート" + bookData.sheetName + "，"
+      　　　　　　　　 + lastRow + "行目のタイムスタンプ）";
+      InsertError(error);
+      return;
+    }
+    // Logger.log("while in");
+    // Logger.log(col);
+    // Logger.log(range.getCell(1, col).getValue());
+    // Logger.log(range.getCell(1, col).isBlank());
     col++
   }
-  Logger.log(col);
+  // Logger.log(col);
   let answers = {};
   answers.bookNumber = bookData.bookNumber;
   answers.employeeName = range.getCell(1, col).getValue();
   answers.employeeNumber = range.getCell(1, col + 1).getValue();
   answers.borrowDate = range.getCell(1, col + 2).getValue();
   answers.backDeadline = range.getCell(1, col + 3).getValue();
-  Logger.log(answers);
+  if (answers.employeeName == null || answers.employeeName == "" ||
+      answers.employeeNumber == null || answers.employeeNumber == "" ||
+      answers.borrowDate == null || answers.borrowDate == "" ||
+      answers.backDeadline == null || answers.backDeadline == ""){
+    error.employeeName = answers.employeeName;
+    error.employeeNumber = answers.employeeNumber;
+    error.formAnswer1 = answers.borrowDate;
+    error.formAnswer2 = answers.backDeadline;
+    error.what = "フォームの回答の取得に失敗しました（トリガーシート" + bookData.sheetName + "，"
+    　　　　　　　　 + lastRow + "行目のタイムスタンプ，フォームの回答" + col + "列目～）";
+    InsertError(error);
+    return;
+  }
+  // Logger.log(answers);
   return answers;
 }
 
