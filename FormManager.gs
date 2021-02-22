@@ -1,4 +1,15 @@
 function ManageLibrary(){
+
+  let error = {};
+  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  error.book = "";
+  error.employeeName = "";
+  error.employeeNumber = "";
+  error.formAnswer1 = "";
+  error.formAnswer2 = "";
+  error.where = "ManageLibrary(FormManager)";
+
+
   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
   const SHEETS = TriggerSS.getSheets();
   let timestamp = [];
@@ -9,14 +20,6 @@ function ManageLibrary(){
     const SS = SpreadsheetApp.openById("1d-DK2eNTH6iUVlj_kyNE6lvSp20eQiIR1ydu-6lf9RA");
   }
   catch (e) {
-    let error = {};
-    error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
-    error.book = answers.bookNumber +"-返却";
-    error.employeeName = answers.employeeName;
-    error.employeeNumber = answers.employeeNumber;
-    error.formAnswer1 = answers.borrowDate;
-    error.formAnswer2 = answers.backDeadline;
-    error.where = "ManageLibrary(FormManager)";
     error.what = "スプレッドシート「図書貸出管理」のIDが間違っています";
     InsertError(error);
     return;
@@ -42,44 +45,49 @@ function ManageLibrary(){
 
     if (SHEETS[i].getLastRow() == 1){
       timestamp[i] = 0;
-    } else{
-　    timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+    } else {
+      timestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
       sortedTimestamp[i] = SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue();
+      if (SHEETS[i].getRange(SHEETS[i].getLastRow(), 1).getCell(1,1).getValue() == ""){
+        error.what = "シート「" + SHEETS[i].getName() +"」の最終行" + SHEETS[i].getLastRow() +"行目にタイムスタンプがありません";
+        InsertError(error);
+        return;
+      }
   　}
   }
   // let originalTimestamp = timestamp;
   // Logger.log(timestamp);
   // Logger.log(sortedTimestamp);
   sortedTimestamp.sort(function(a, b) {return b - a;});
-   Logger.log("timestamp"+timestamp);
-   Logger.log("sortedTimestamp"+sortedTimestamp);
-   Logger.log("timestamp[5]（今回の最新のタイムスタンプ）"+timestamp[5]);
-   Logger.log("sortedTimestamp[0]（並び変えて先頭＝最新のタイムスタンプ）"+sortedTimestamp[0]);
-   Logger.log("SHEETS.length..."+SHEETS.length);
+  //  Logger.log("timestamp"+timestamp);
+  //  Logger.log("sortedTimestamp"+sortedTimestamp);
+  //  Logger.log("timestamp[5]（今回の最新のタイムスタンプ）"+timestamp[5]);
+  //  Logger.log("sortedTimestamp[0]（並び変えて先頭＝最新のタイムスタンプ）"+sortedTimestamp[0]);
+  //  Logger.log("SHEETS.length..."+SHEETS.length);
 
   for (let i = 0; i < SHEETS.length; i++){
-  　Logger.log("i..."+i);
-   Logger.log("sortedTimestamp[0]"+sortedTimestamp[0]);
-   Logger.log("timestamp[i]"+timestamp[i]);
+  // 　Logger.log("i..."+i);
+  //  Logger.log("sortedTimestamp[0]"+sortedTimestamp[0]);
+  //  Logger.log("timestamp[i]"+timestamp[i]);
 
     if (sortedTimestamp[0].toString() == timestamp[i].toString()){
-      Logger.log("入った"+i);
-      Logger.log(sortedTimestamp[0]);
-      Logger.log(timestamp[i]);
+      // Logger.log("入った"+i);
+      // Logger.log(sortedTimestamp[0]);
+      // Logger.log(timestamp[i]);
       var triggerSheet = SHEETS[i]; 
       bookData.sheetName = triggerSheet.getName();
       var sheetNameSplit = triggerSheet.getName().split("-");
       bookData.bookNumber = sheetNameSplit[0];
     }
   }
-  Logger.log(bookData.sheetName);
-  Logger.log(bookData.bookNumber);
-  Logger.log(bookData.sheetName.indexOf());
+  // Logger.log(bookData.sheetName);
+  // Logger.log(bookData.bookNumber);
+  // Logger.log(bookData.sheetName.indexOf());
   if (bookData.sheetName.indexOf("貸出")　>= 0){
-    Logger.log("borrowIn");
+    // Logger.log("borrowIn");
     BorrowBook(bookData, SS);
   } else if(bookData.sheetName.indexOf("返却")　>= 0){
-    Logger.log("backIn");
+    // Logger.log("backIn");
     BackBook(bookData, SS);
   }
 
