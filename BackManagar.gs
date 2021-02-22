@@ -11,8 +11,8 @@ function BackBook(bookData, SS){
   UpdateFormByBack(answers, SS);
 }
 
-function GetBackData(bookData){
-  // let bookData = {"bookNumber" : 1, "sheetName" : "1-返却"}
+function GetBackData(){
+   let bookData = {"bookNumber" : 1, "sheetName" : "1-返却"}
 
   let error = {};
   error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
@@ -66,6 +66,10 @@ function GetBackData(bookData){
   answers.employeeNumber = range.getCell(lastRow, 2).getValue();
   answers.backDate = range.getCell(lastRow, 3).getValue();
   // Logger.log(answers);
+  // Logger.log(!answers.bookNumber);
+  // Logger.log(!answers.employeeName);
+  // Logger.log(!answers.employeeNumber);
+  // Logger.log(!answers.backDate);
   if (answers.employeeName == null || answers.employeeName == "" ||
       answers.employeeNumber == null || answers.employeeNumber == "" ||
       answers.backDate == null || answers.backDate == ""){
