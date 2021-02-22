@@ -11,8 +11,8 @@ function BackBook(bookData, SS){
   UpdateFormByBack(answers, SS);
 }
 
-function GetBackData(){
-  let bookData = {"bookNumber" : 1, "sheetName" : "1-返却"}
+function GetBackData(bookData){
+  // let bookData = {"bookNumber" : 1, "sheetName" : "1-返却"}
 
   let error = {};
   error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
@@ -66,6 +66,18 @@ function GetBackData(){
   answers.employeeNumber = range.getCell(lastRow, 2).getValue();
   answers.backDate = range.getCell(lastRow, 3).getValue();
   // Logger.log(answers);
+  if (answers.employeeName == null || answers.employeeName == "" ||
+      answers.employeeNumber == null || answers.employeeNumber == "" ||
+      answers.backDate == null || answers.backDate == ""){
+    error.employeeName = answers.employeeName;
+    error.employeeNumber = answers.employeeNumber;
+    error.formAnswer1 = answers.backDate;
+    error.formAnswer2 = "";
+    error.what = "フォームの回答の取得に失敗しました（トリガーシート" + bookData.sheetName + "，"
+    　　　　　　　　 + lastRow + "行目のタイムスタンプ）";
+    InsertError(error);
+  }
+  
   return answers;
 }
 
@@ -85,8 +97,8 @@ function InsertBackLogData(answers, SS){
   error.book = answers.bookNumber　+ "-返却";
   error.employeeName = answers.employeeName;
   error.employeeNumber = answers.employeeNumber;
-  error.formAnswer1 = answers.borrowDate;
-  error.formAnswer2 = answers.backDeadline;
+  error.formAnswer1 = answers.backDate;
+  error.formAnswer2 = "";
   error.where = "InsertBackLogData(BackManager)";
 
   // var answers = {"bookNumber" : 1}
@@ -155,8 +167,8 @@ function ResetStatus(answers, SS){
   error.book = answers.bookNumber　+ "-返却";
   error.employeeName = answers.employeeName;
   error.employeeNumber = answers.employeeNumber;
-  error.formAnswer1 = answers.borrowDate;
-  error.formAnswer2 = answers.backDeadline;
+  error.formAnswer1 = answers.backDate;
+  error.formAnswer2 = "";
   error.where = "ResetStatus(BackManager)";
 
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
@@ -197,8 +209,8 @@ function UpdateFormByBack(answers, SS) {
   error.book = answers.bookNumber　+ "-返却";
   error.employeeName = answers.employeeName;
   error.employeeNumber = answers.employeeNumber;
-  error.formAnswer1 = answers.borrowDate;
-  error.formAnswer2 = answers.backDeadline;
+  error.formAnswer1 = answers.backDate;
+  error.formAnswer2 = "";
   error.where = "UpdateFormByBack(BackManager)";
 
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
