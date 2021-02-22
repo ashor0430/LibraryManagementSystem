@@ -11,7 +11,15 @@ function BackBook(bookData, SS){
   UpdateFormByBack(answers, SS);
 }
 
-function GetBackData(bookData){
+function GetBackData(){
+  let bookData = {"bookNumber" : 1, "sheetName" : "1-返却"}
+
+  let error = {};
+  error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
+  error.book = bookData.bookNumber +"-返却";
+  error.where = "InsertBorrowLogData(BorrowManager)";
+
+
   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
   // const SHEETS = TriggerSS.getSheets();
   // let timestamp = [];
