@@ -18,7 +18,7 @@ function GetBorrowData(bookData){
   let error = {};
   error.timestamp = new Date(),"JST", "yyyy/MM/dd HH:mm:ss";
   error.book = bookData.bookNumber +"-貸出";
-  error.where = "InsertBorrowLogData(BorrowManager)";
+  error.where = "GetBorrowData(BorrowManager)";
 
   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
   // const SHEETS = TriggerSS.getSheets();
